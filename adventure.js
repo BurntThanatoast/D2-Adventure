@@ -155,6 +155,17 @@ class AdventureScene extends Phaser.Scene {
         }
     }
 
+    shake(image) {
+        this.tweens.add({
+            targets: image,
+            x: '+=' + this.s,
+            repeat: 2,
+            yoyo: true,
+            ease: 'Sine.inOut',
+            duration: 100
+        });
+    }
+
     gotoScene(key) {
         this.cameras.main.fade(this.transitionDuration, 0, 0, 0);
         this.time.delayedCall(this.transitionDuration, () => {

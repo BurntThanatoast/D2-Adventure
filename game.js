@@ -157,14 +157,7 @@ class Demo2 extends AdventureScene {
                 } else {
                     this.showMessage("Hey you got any food I am starving.");
                 }
-                this.tweens.add({
-                    targets: man,
-                    x: '+=' + this.s,
-                    repeat: 2,
-                    yoyo: true,
-                    ease: 'Sine.inOut',
-                    duration: 100
-                });
+                this.shake(man);
             });
 
         
@@ -235,7 +228,7 @@ class Demo3 extends AdventureScene {
 
 class Demo4 extends AdventureScene {
     constructor() {
-        super("demo4", "The Button Room");
+        super("demo4", "The Vending Machine Room");
     }
 
     preload() {
@@ -273,29 +266,8 @@ class Demo4 extends AdventureScene {
                 } else {
                     this.showMessage("Give me money and I will let you have the Disneyland tickets.");
                 }
-                this.tweens.add({
-                    targets: machine,
-                    x: '+=' + this.s,
-                    repeat: 2,
-                    yoyo: true,
-                    ease: 'Sine.inOut',
-                    duration: 100
-                });
+                this.shake(machine);
             });
-
-        let finish = this.add.text(this.w * 0.6, this.w * 0.2, '(finish the game)')
-            .setInteractive()
-            .on('pointerover', () => {
-                this.showMessage('*giggles*');
-                this.tweens.add({
-                    targets: finish,
-                    x: this.s + (this.h - 2 * this.s) * Math.random(),
-                    y: this.s + (this.h - 2 * this.s) * Math.random(),
-                    ease: 'Sine.inOut',
-                    duration: 500
-                });
-            })
-            .on('pointerdown', () => this.gotoScene('outro'));
     }
 }
 
@@ -349,7 +321,7 @@ class Outro2 extends Phaser.Scene {
     create() {
         let box = this.add.text(10, 10,
             `After finding out you lost your chance to go to Disneyland you cry
-and weep.  The man walks up and kicks you in the crotch and you wake
+and weep.  The man from the campfire walks up and kicks you in the crotch and you wake
 up in your bed with a jolt.  The pain is still there.  Was it a 
 dream?  Regardless you wake up to find that you didn't turn in 
 your homework on time.  Damn, this shit sucks.`
