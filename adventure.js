@@ -137,6 +137,24 @@ class AdventureScene extends Phaser.Scene {
         });
     }
 
+    clearInventory() {
+        if (this.hasItem('Torch')) {
+            this.loseItem('Torch');
+        }
+        if (this.hasItem('Whopper')) {
+            this.loseItem('Whopper');
+        }
+        if (this.hasItem('Lit Torch')) {
+            this.loseItem('Lit Torch');
+        }
+        if (this.hasItem('2 Dollar Bill')) {
+            this.loseItem('2 Dollar Bill');
+        }
+        if (this.hasItem('Disneyland Tickets')) {
+            this.loseItem('Disneyland Tickets');
+        }
+    }
+
     gotoScene(key) {
         this.cameras.main.fade(this.transitionDuration, 0, 0, 0);
         this.time.delayedCall(this.transitionDuration, () => {

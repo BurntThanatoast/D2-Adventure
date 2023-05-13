@@ -13,38 +13,48 @@ class Demo1 extends AdventureScene {
     }
 
     onEnter() {
-
-        let clip = this.add.image(this.w * 0.6, this.w * 0.3, 'Whopper')
-            .setInteractive()
-            .on('pointerover', () => this.showMessage("A whopper from BK. Looks surpisingly edible."))
-            .on('pointerdown', () => {
-                this.showMessage("No touching!");
-                this.tweens.add({
-                    targets: clip,
-                    x: '+=' + this.s,
-                    repeat: 2,
-                    yoyo: true,
-                    ease: 'Sine.inOut',
-                    duration: 100
+        if (this.hasItem('Whopper')) {
+            //Do Nothing
+        } else if (this.hasItem("Lit Torch")) {
+            let clip = this.add.image(this.w * 0.6, this.w * 0.3, 'Whopper')
+                .setInteractive()
+                .on('pointerover', () => this.showMessage("Couldn't see this before, a whopper from BK. Looks surpisingly edible."))
+                .on('pointerdown', () => {
+                    this.gainItem('Whopper');
+                    this.showMessage("Might want a snack for later.");
+                    this.tweens.add({
+                        targets: clip,
+                        y: `-=${2 * this.s}`,
+                        alpha: { from: 1, to: 0 },
+                        duration: 500,
+                        onComplete: () => clip.destroy()
+                    });
                 });
-            });
+        }
 
-        let torch = this.add.image(this.w * 0.4, this.w * 0.4, 'Torch')
-            .setInteractive()
-            .on('pointerover', () => {
-                this.showMessage("Looks like an unlit Minecraft Torch.")
-            })
-            .on('pointerdown', () => {
-                this.showMessage("You picked up the torch, kinda blocky.");
-                this.gainItem('torch');
-                this.tweens.add({
-                    targets: torch,
-                    y: `-=${2 * this.s}`,
-                    alpha: { from: 1, to: 0 },
-                    duration: 500,
-                    onComplete: () => torch.destroy()
-                });
-            })
+        if (this.hasItem("Lit Torch")) {
+            //Do nothing
+        } else if (this.hasItem("Torch")) {
+            //Do nothing
+        } else {
+            let torch = this.add.image(this.w * 0.4, this.w * 0.4, 'Torch')
+                .setInteractive()
+                .on('pointerover', () => {
+                    this.showMessage("Looks like an unlit Minecraft Torch.")
+                })
+                .on('pointerdown', () => {
+                    this.showMessage("You picked up the torch, kinda blocky.");
+                    this.gainItem('Torch');
+                    this.tweens.add({
+                        targets: torch,
+                        y: `-=${2 * this.s}`,
+                        alpha: { from: 1, to: 0 },
+                        duration: 500,
+                        onComplete: () => torch.destroy()
+                    });
+                })
+
+        }
 
         let door = this.add.image(this.w * 0.2, this.w * 0.15, 'Door')
             .setInteractive()
@@ -103,17 +113,23 @@ class Demo2 extends AdventureScene {
                 this.gotoScene('demo3');
             })
 
-        let fire = this.add.image(this.w * 0.6, this.w * 0.3, 'Fire')
+        let fire = this.add.image(this.w * 0.4, this.w * 0.3, 'Fire')
             .setInteractive()
             .on('pointerover', () => {
-                if (this.hasItem("torch")) {
+                if (this.hasItem("Torch")) {
                     this.showMessage("I can light my torch with this.");
                 } else {
                     this.showMessage("Well at least I can see in this room.");
                 }
             })
             .on('pointerdown', () => {
-                this.showMessage("No touching!");
+                if (this.hasItem("Torch")) {
+                    this.showMessage("Finally my torch is lit.");
+                    this.loseItem('Torch')
+                    this.gainItem('Lit Torch');
+                } else {
+                    this.showMessage("I think it may be too hot to touch.");
+                }
                 this.tweens.add({
                     targets: clip,
                     x: '+=' + this.s,
@@ -124,17 +140,18 @@ class Demo2 extends AdventureScene {
                 });
             });
 
-            let man = this.add.image(this.w * 0.6, this.w * 0.3, 'Dude')
+            let man = this.add.image(this.w * 0.63, this.w * 0.4, 'Dude')
             .setInteractive()
             .on('pointerover', () => {
-                if (this.hasItem("whopper")) {
+                if (this.hasItem("Whopper")) {
                     this.showMessage("Let me get that whopper I'll pay you.");
                 } else {
                     this.showMessage("Just some dude, looks hungry.");
                 }
             })
             .on('pointerdown', () => {
-                if (this.hasItem("whopper")) {
+                if (this.hasItem("Whopper")) {
+                    this.loseItem('Whopper');
                     this.showMessage("Thanks, here some money.");
                     this.gainItem('2 dollar bill');
                 } else {
@@ -204,12 +221,13 @@ class Demo3 extends AdventureScene {
                 this.showMessage("Uh oh.");
                 this.tweens.add({
                     targets: button,
-                    x: '+=' + this.s,
+                    y: '+=' + this.s,
                     repeat: 2,
                     yoyo: true,
                     ease: 'Sine.inOut',
                     duration: 100
                 });
+                this.gotoScene('outro2');
             });
         
     }
@@ -251,6 +269,7 @@ class Demo4 extends AdventureScene {
                 if (this.hasItem("2 dollar bill")) {
                     this.showMessage("Here are your Disneyland Tickets.");
                     this.gainItem('Disneyland Tickets');
+                    this.gotoScene('outro');
                 } else {
                     this.showMessage("Give me money and I will let you have the Disneyland tickets.");
                 }
@@ -307,8 +326,36 @@ class Outro extends Phaser.Scene {
         super('outro');
     }
     create() {
-        this.add.text(50, 50, "That's all!").setFontSize(50);
-        this.add.text(50, 100, "Click anywhere to restart.").setFontSize(20);
+        let box = this.add.text(10, 10,
+            `You watch as the Vending Machine begins to tremble and
+float in the air.  Magical runes start to appear around it with
+ominous noises coming from all around.  After a great buildup and a
+flash of light you open your eyes to find yourself in Disneyland.
+Awesome, you spend the whole day at the park trying all the rides and
+getting terrible knick knacks for expensive prices.  At the end of the
+day you get an email saying you got a 100% on your homework.
+Life is good.`
+                            ).setFontSize(30);
+        this.add.text(50, 100, "Click anywhere to restart.").setFontSize(40);
+        this.clearInventory();
+        this.input.on('pointerdown', () => this.scene.start('intro'));
+    }
+}
+
+class Outro2 extends Phaser.Scene {
+    constructor() {
+        super('outro2');
+    }
+    create() {
+        let box = this.add.text(10, 10,
+            `After finding out you lost your chance to go to Disneyland you cry
+and weep.  The man walks up and kicks you in the crotch and you wake
+up in your bed with a jolt.  The pain is still there.  Was it a 
+dream?  Regardless you wake up to find that you didn't turn in 
+your homework on time.  Damn, this shit sucks.`
+                            ).setFontSize(30);
+        this.add.text(10, 170, "Click anywhere to restart.").setFontSize(40);
+        this.clearInventory();
         this.input.on('pointerdown', () => this.scene.start('intro'));
     }
 }
@@ -321,7 +368,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Intro, Demo1, Demo2, Demo3, Demo4, Outro],
+    scene: [Intro, Demo1, Demo2, Demo3, Demo4, Outro, Outro2],
     title: "Adventure Game",
 });
 
