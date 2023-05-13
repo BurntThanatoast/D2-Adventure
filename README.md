@@ -1,11 +1,11 @@
 A simple adventure game by {who?} based on a simple adventure game engine by [Adam Smith](https://github.com/rndmcnlly).
 
 Code requirements:
-- **4+ scenes based on `AdventureScene`**: unsatisfied (name at least 4 of the classes).
-- **2+ scenes *not* based on `AdventureScene`**: unsatisfied (name the classes).
+- **4+ scenes based on `AdventureScene`**: Demo1, Demo2, Demo3, Demo4
+- **2+ scenes *not* based on `AdventureScene`**: Outro, Outro2
 - **2+ methods or other enhancement added to the adventure game engine to simplify my scenes**:
-    - Enhancement 1: clearInventory- clears the inventory of the player completely when they reset the game.
-    - Enhancement 2: Shake- shakes an image back and forth.
+    - Enhancement 1: push- makes image go up then down.
+    - Enhancement 2: shake- shakes an image back and forth.
 
 Experience requirements:
 - **4+ locations in the game world**: Demo1(Dark Room), Demo2(Campfire Room), Demo3(Button Room), Demo4(Vending Machine Room)
